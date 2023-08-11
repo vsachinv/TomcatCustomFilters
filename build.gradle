@@ -2,8 +2,11 @@ plugins {
     id 'java'
 }
 
-group 'com.rxlogix'
-version '1.0-SNAPSHOT'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+
+group 'org.apache.catalina.custom'
+version '0.1'
 
 sourceCompatibility = 1.8
 
@@ -14,4 +17,50 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     implementation 'org.apache.tomcat.embed:tomcat-embed-core:8.5.35'
+}
+
+javadoc {
+    source = sourceSets.main.allJava
+    classpath = configurations.compileClasspath
+
+    options
+            {
+                setMemberLevel JavadocMemberLevel.PUBLIC
+                setAuthor true
+
+                links "https://docs.oracle.com/javase/8/docs/api/"
+            }
+}
+
+task sourceJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allJava
+}
+
+task packageJavadoc(type: Jar) {
+    from javadoc
+    classifier = 'javadoc'
+}
+
+
+publishing {
+
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = "https://maven.pkg.github.com/vsachinv/TomcatCustomFilters"
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+
+    publications {
+        gpr(MavenPublication) {
+            from components.java
+            artifact sourceJar
+            artifact packageJavadoc
+        }
+    }
 }
