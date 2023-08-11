@@ -8,7 +8,7 @@ The following entries in a web application's web.xml would enable the Request Du
 
 **Steps:**
 
-1. Download jar from release and add Jar to tomcat path **CATALINA_BASE/lib/TomcatCustomFilters-< VERSION >.jar** 
+1. Download jar from release/packages and add Jar to tomcat path **CATALINA_BASE/lib/tomcatCustomFilters-< VERSION >.jar** 
 
 2. If the entries were added to CATALINA_BASE/conf/**web.xml**, the Request Dumper Filter would be enabled for all web applications.
 
